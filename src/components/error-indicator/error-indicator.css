@@ -1,0 +1,12 @@
+.error-indicator {
+    display: block;
+    position: relative;
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+    color: #ffc300;
+}
+
+.error-indicator img {
+    width: 100px;
+}
