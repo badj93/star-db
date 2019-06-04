@@ -28,7 +28,7 @@ export default class ItemDetails extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.personId !== prevProps.personId) {
+    if (this.props.itemId !== prevProps.itemId) {
       this.setState({
         loading: true
       });

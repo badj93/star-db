@@ -1,17 +1,10 @@
 import React from 'react'
 import ItemList from '../item-list/item-list'
 import withData from '../hoc-helper/with-data'
-import SwapiService from '../../services/swapi-service'
+import withSwapiService from "../hoc-helper/with-swapi-service";
+import compose from '../hoc-helper/compose'
 
-const swapiService = new SwapiService();
-
-const {
-  getAllPeople,
-  getAllStarships,
-  getAllPlanets
-} = swapiService;
-
-const withChildFunction = (Wrapped, fn) => {
+const withChildFunction = (fn) => (Wrapped) => {
   return (props) => {
     return (
       <Wrapped { ...props }>
@@ -21,14 +14,44 @@ const withChildFunction = (Wrapped, fn) => {
   }
 };
 
+const mapPersonMethodsToProps = (swapiService) => {
+  return {
+    getData: swapiService.getAllPeople
+  }
+};
+
+const mapPlanetsMethodsToProps = (swapiService) => {
+  return {
+    getData: swapiService.getAllPlanets
+  }
+};
+
+const mapStarshipsMethodsToProps = (swapiService) => {
+  return {
+    getData: swapiService.getAllStarships
+  }
+};
+
 const renderName = ({ name }) => <span>{ name }</span>;
 const renderModelAndName = ({ model, name}) => <span>{ name } ({ model })</span>;
 
-const PersonList = withData(withChildFunction(ItemList, renderName), getAllPeople);
+const PersonList = compose(
+                    withSwapiService(mapPersonMethodsToProps),
+                      withData,
+                      withChildFunction(renderName)
+                    )(ItemList);
 
-const PlanetList = withData(withChildFunction(ItemList, renderName), getAllPlanets);
+const PlanetList = compose(
+                    withSwapiService(mapPlanetsMethodsToProps),
+                      withData,
+                      withChildFunction(renderName)
+                    )(ItemList);
 
-const StarshipList = withData(withChildFunction(ItemList, renderModelAndName), getAllStarships);
+const StarshipList = compose(
+                      withSwapiService(mapStarshipsMethodsToProps),
+                        withData,
+                        withChildFunction(renderModelAndName)
+                      )(ItemList);
 
 export {
   PersonList,
